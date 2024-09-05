@@ -1,5 +1,6 @@
 package com.example.sbb;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -114,6 +115,7 @@ class SbbApplicationTests {
 		assertEquals(2, a.getQuestion().getId());
 	}
 
+	@Transactional
 	@Test
 	void testJpa11() {
 		Optional<Question> oq = this.questionRepository.findById(2);
