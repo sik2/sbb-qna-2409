@@ -27,11 +27,4 @@ public class QuestionController {
         model.addAttribute("question", question);
         return "question_detail";
     }
-
-    @PostMapping("/create")
-    @ResponseBody
-    public String createQuestion () {
-        return "전송완료";
-    }
-
 }
