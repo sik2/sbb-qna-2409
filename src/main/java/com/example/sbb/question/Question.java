@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -33,4 +34,7 @@ public class Question {
     // 기본은 fetch = FetchType.LAZY
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Answer> answerList;
+
+    @ManyToMany
+    Set<SiteUser> voter;
 }

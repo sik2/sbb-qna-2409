@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Setter
@@ -29,4 +30,7 @@ public class Answer {
     // 기본은 fetch = FetchType.EAGER
     @ManyToOne(fetch = FetchType.LAZY)
     private Question question;
+
+    @ManyToMany
+    Set<SiteUser> voter;
 }
