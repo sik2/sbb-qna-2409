@@ -14,10 +14,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 
+@RequestMapping("/answer")
 @RequiredArgsConstructor
 @Controller
 public class AnswerController {
@@ -26,7 +28,7 @@ public class AnswerController {
     private final UserService userService;
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/answer/create/{id}")
+    @PostMapping("/create/{id}")
     public String createAnswer(Model model, @PathVariable("id") Integer id, @Valid AnswerForm answerForm, BindingResult bindingResult, Principal principal) {
         Question question = this.questionService.getQuestion(id);
         SiteUser siteUser = this.userService.getUser(principal.getName());
@@ -42,7 +44,7 @@ public class AnswerController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/answer/modify/{id}")
+    @GetMapping("/modify/{id}")
     public String modifyAnswer(AnswerForm answerForm, @PathVariable("id") Integer id, Principal principal) {
         Answer answer = this.answerService.getAnswer(id);
 
@@ -56,7 +58,7 @@ public class AnswerController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/answer/modify/{id}")
+    @PostMapping("/modify/{id}")
     public String modifyAnswer(@Valid AnswerForm answerForm, BindingResult bindingResult,
                                @PathVariable("id") Integer id, Principal principal) {
         if (bindingResult.hasErrors()) {
@@ -72,4 +74,18 @@ public class AnswerController {
 
         return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
+    public String deleteAnswer(@PathVariable("id") Integer id, Principal principal) {
+        Answer answer = this.answerService.getAnswer(id);
+        if (!answer.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+        }
+
+        this.answerService.delete(answer);
+
+        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+    }
+
 }
