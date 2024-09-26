@@ -18,8 +18,10 @@
                     </div>
                 </div>
                 <div class="my-3">
-                        <a th:href="@{|/question/vote/${question.id}|}" class="recommend btn btn-sm btn-outline-secondary"
-                            onclick="return confirm('정말 추천하시겠습니까?')"
+                        <a
+                            id="recommend_question"
+                           class="recommend btn btn-sm btn-outline-secondary"
+                           onclick="return confirm('정말 추천하시겠습니까?')"
                         >
                         추천
                         <span class="badge rounded-pill bg-success" th:text="${#lists.size(question.voter)}"></span>
@@ -88,3 +90,23 @@
         </form>
     </div>
 </html>
+<script th:inline="javascript">
+    const question_id = [[${question.id}]];
+
+    $('#recommend_question').on('click', function() {
+        $.ajax({
+          url: "/question/vote/" + question_id,       // 요청을 보낼 서버 URL
+          type: "GET",             // 요청 메서드 ("GET", "POST", "PUT", "DELETE" 등)
+          success: function(response) {
+            // 요청이 성공했을 때 실행되는 함수
+             console.log("question_id", question_id);
+            console.log("응답:", response);
+          },
+          error: function(xhr, status, error) {
+            // 요청이 실패했을 때 실행되는 함수
+            console.log("에러:", error);
+          }
+        });
+
+    });
+</script>
